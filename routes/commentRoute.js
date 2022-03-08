@@ -38,8 +38,10 @@ router.delete(
   "/:id/comments/delete",
   [verifyAcc, retrievePost],
   async (req, res) => {
-    let comments = res.post.comments;
-    console.log(comments);
+    let deletedComment = res.post.comments;
+    deletedComment.forEach((comment) => {
+      console.log(comment._id);
+    });
     try {
       res.status(200).send({ message: "Comments deleted successfully." });
     } catch (error) {
