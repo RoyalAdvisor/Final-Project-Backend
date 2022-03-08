@@ -1,6 +1,7 @@
 const router = require("express").Router();
 const post = require("../models/postModel");
 const { retrievePost } = require("../middleware/retriever");
+const { retrieveUser } = require("../middleware/retriever");
 const verifyAcc = require("../middleware/authJWT");
 
 router.get("/", verifyAcc, async (req, res) => {
@@ -16,13 +17,14 @@ router.get("/:id", [verifyAcc, retrievePost], (req, res) => {
   res.send(res.post);
 });
 
-router.post("/", verifyAcc, async (req, res) => {
+router.post("/", [verifyAcc, retrieveUser], async (req, res) => {
+  let userName = res.user.username;
   const newPost = new post({
     main_image: req.body.main_image,
     title: req.body.title,
     subtitle: req.body.subtitle,
     desc: req.body.desc,
-    created_by: req.userId,
+    created_by: userName,
   });
   try {
     await newPost.save();

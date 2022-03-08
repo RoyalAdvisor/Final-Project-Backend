@@ -6,6 +6,7 @@ const user = require("../models/userModel");
 const comment = require("../models/commentModel");
 const verifyAcc = require("../middleware/authJWT");
 const { retrievePost } = require("../middleware/retriever");
+const { retrieveUser } = require("../middleware/retriever");
 const jwt = require("jsonwebtoken");
 
 router.get("/:id/comments", [verifyAcc, retrievePost], (req, res) => {
@@ -14,10 +15,12 @@ router.get("/:id/comments", [verifyAcc, retrievePost], (req, res) => {
 
 router.post(
   "/:id/comments/create",
-  [verifyAcc, retrievePost],
+  [verifyAcc, retrievePost, retrieveUser],
   async (req, res) => {
+    let userName = res.user.username;
     let newComment = new comment({
       content: req.body.content,
+      posted_by: userName,
     });
     let comments = res.post.comments;
     let addedToComments = false;
@@ -36,6 +39,7 @@ router.delete(
   [verifyAcc, retrievePost],
   async (req, res) => {
     let comments = res.post.comments;
+    console.log(comments);
     try {
       res.status(200).send({ message: "Comments deleted successfully." });
     } catch (error) {
@@ -43,4 +47,5 @@ router.delete(
     }
   }
 );
+
 module.exports = router;

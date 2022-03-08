@@ -6,7 +6,7 @@ const commentSchema = new mongoose.Schema(
       type: String,
       required: true,
     },
-    created_by: {
+    posted_by: {
       type: String,
       required: false,
     },
