@@ -23,6 +23,7 @@ router.post("/", [verifyAcc, retrieveUser], async (req, res) => {
     main_image: req.body.main_image,
     title: req.body.title,
     subtitle: req.body.subtitle,
+    catergory: req.body.catergory,
     desc: req.body.desc,
     created_by: userName,
   });
@@ -45,6 +46,7 @@ router.put(
     if (req.body.main_image != null) res.post.main_image = req.body.main_image;
     if (req.body.title != null) res.post.title = req.body.title;
     if (req.body.subtitle != null) res.post.subtitle = req.body.subtitle;
+    if (req.body.catergory != null) res.post.catergory = req.body.catergory;
     if (req.body.desc != null) res.post.desc = req.body.desc;
     if (req.body.created_by != null) res.post.created_by = res.user.username;
     try {
