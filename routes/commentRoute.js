@@ -35,19 +35,20 @@ router.post(
 
 router.delete(
   "/:id/comments/delete",
-  [verifyAcc, retrievePost],
+  [verifyAcc, retrievePost, retrieveUser],
   async (req, res) => {
     let commentList = res.post.comments;
-    let index = commentList
-      .map((comment) => {
-        return comment._id;
-      })
-      .indexOf(comment._id);
+    let index;
+    console.log(res.user.username);
+    index = commentList.forEach((comment) => {
+      let postedBy = comment.posted_by;
+      if (res.user.username !== postedBy) {
+        return res.status(401);
+      }
+    });
     try {
-      commentList.splice(index, 1);
-      console.log(commentList);
-      const updatedPost = res.post.save(commentList);
-      res.status(200).send({ message: "Comment deleted successfully." });
+      const updatedPost = await res.post.save(commentList);
+      res.status(200).send(updatedPost);
     } catch (error) {
       res.status(500).send({ message: error.message });
     }
