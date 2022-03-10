@@ -5,6 +5,7 @@ const app = express();
 const mongoose = require("mongoose");
 const userRoute = require("./routes/userRoute");
 const postRoute = require("./routes/postRoute");
+const commentRoute = require("./routes/commentRoute");
 
 app.use(express.json());
 
@@ -14,6 +15,7 @@ mongoose.connect(process.env.connection, { useNewUrlParser: true }, () => {
 
 app.use("/users", userRoute);
 app.use("/posts", postRoute);
+app.use("/posts", commentRoute);
 
 app.get("/", (req, res) => {
   res.send("Rest API for The Random Blog.");
