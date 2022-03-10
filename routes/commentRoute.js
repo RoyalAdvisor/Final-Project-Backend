@@ -37,11 +37,6 @@ router.delete(
   "/:id/comments/delete",
   [verifyAcc, retrievePost],
   async (req, res) => {
-    if (res.user.username !== res.post.comments.posted_by) {
-      return res
-        .status(401)
-        .send({ message: "You are not authorized to delete this post." });
-    }
     let commentList = res.post.comments;
     let index = commentList
       .map((comment) => {
