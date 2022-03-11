@@ -10,6 +10,10 @@ const commentSchema = new mongoose.Schema(
       type: String,
       required: false,
     },
+    userId: {
+      type: String,
+      required: false,
+    },
   },
   { timestamps: true }
 );

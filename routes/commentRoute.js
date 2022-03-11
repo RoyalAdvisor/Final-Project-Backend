@@ -17,9 +17,11 @@ router.post(
   [verifyAcc, retrievePost, retrieveUser],
   async (req, res) => {
     let userName = res.user.username;
+    let userID = res.user._id;
     let newComment = new comment({
       content: req.body.content,
       posted_by: userName,
+      userId: userID,
     });
     let comments = res.post.comments;
     let addedToComments = false;
@@ -37,18 +39,22 @@ router.delete(
   "/:id/comments/delete",
   [verifyAcc, retrievePost, retrieveUser],
   async (req, res) => {
-    let commentList = res.post.comments;
-    let index;
-    console.log(res.user.username);
-    index = commentList.forEach((comment) => {
-      let postedBy = comment.posted_by;
-      if (res.user.username !== postedBy) {
-        return res.status(401);
-      }
-    });
+    let storedComments = res.post.comments;
+    let index = null;
     try {
-      const updatedPost = await res.post.save(commentList);
-      res.status(200).send(updatedPost);
+      storedComments.forEach((comment) => {
+        index = comment._id.valueOf();
+        if (res.user._id.valueOf() !== comment.userId.valueOf()) {
+          return res
+            .status(404)
+            .send({ message: "You cannot delete this comment." });
+        } else {
+          console.log("authorized");
+          if (index !== null) storedComments.splice(index, 1);
+        }
+      });
+      await res.post.save(storedComments);
+      res.status(200);
     } catch (error) {
       res.status(500).send({ message: error.message });
     }
